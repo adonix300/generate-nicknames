@@ -15,18 +15,58 @@ public class Main {
             texts[i] = generateText("abc", 3 + random.nextInt(3), random);
         }
 
-        Thread thread1 = new Thread(() -> processTexts(texts, 3, counter3letters));
-        Thread thread2 = new Thread(() -> processTexts(texts, 4, counter4letters));
-        Thread thread3 = new Thread(() -> processTexts(texts, 5, counter5letters));
 
-        thread1.start();
-        thread2.start();
-        thread3.start();
+        Thread palindromeThread = new Thread(() -> {
+            for (String text : texts) {
+                if (isPalindrome(text)) {
+                    if (text.length() == 3) {
+                        counter3letters.incrementAndGet();
+                    } else if (text.length() == 4) {
+                        counter4letters.incrementAndGet();
+                    } else if (text.length() == 5) {
+                        counter5letters.incrementAndGet();
+                    }
+                }
+            }
+        });
+
+        Thread OneLetterForWordThread = new Thread(() -> {
+            for (String text : texts) {
+                if (isOneLetterForWord(text)) {
+                    if (text.length() == 3) {
+                        counter3letters.incrementAndGet();
+                    } else if (text.length() == 4) {
+                        counter4letters.incrementAndGet();
+                    } else if (text.length() == 5) {
+                        counter5letters.incrementAndGet();
+                    }
+                }
+            }
+        });
+
+        Thread IncreasingLettersThread =  new Thread(() -> {
+            for (String text : texts) {
+                if (isIncreasingLetters(text)) {
+                    if (text.length() == 3) {
+                        counter3letters.incrementAndGet();
+                    } else if (text.length() == 4) {
+                        counter4letters.incrementAndGet();
+                    } else if (text.length() == 5) {
+                        counter5letters.incrementAndGet();
+                    }
+                }
+            }
+        });
+
+
+        palindromeThread.start();
+        OneLetterForWordThread.start();
+        IncreasingLettersThread.start();
 
         try {
-            thread1.join();
-            thread2.join();
-            thread3.join();
+            palindromeThread.join();
+            OneLetterForWordThread.join();
+            IncreasingLettersThread.join();
 
             System.out.println("Красивых слов с длиной 3: " + counter3letters.get() + " шт");
             System.out.println("Красивых слов с длиной 4: " + counter4letters.get() + " шт");
@@ -44,15 +84,15 @@ public class Main {
         return text.toString();
     }
 
-    public static void processTexts(String[] texts, int length, AtomicInteger counter) {
-        for (String text : texts) {
-            if (text.length() == length) {
-                if (isPalindrome(text) || isIncreasingLetters(text) || isOneLetterForWord(text)) {
-                    counter.incrementAndGet();
-                }
-            }
-        }
-    }
+//    public static void processTexts(String[] texts, int length, AtomicInteger counter) {
+//        for (String text : texts) {
+//            if (text.length() == length) {
+//                if (isPalindrome(text) || isIncreasingLetters(text) || isOneLetterForWord(text)) {
+//                    counter.incrementAndGet();
+//                }
+//            }
+//        }
+//    }
 
     public static boolean isPalindrome(String text) {
         return new StringBuilder(text).reverse().toString().equals(text);
